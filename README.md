@@ -1,6 +1,18 @@
-# 💳 Sistema de Solicitações de Crédito — Projeto de Estudo Full Stack
+# 💳 Sistema de Solicitações de Crédito — Projeto Full Stack
 
-Projeto completo para praticar CRUD, API REST, React e Node.js com foco em entrevista técnica.
+Projeto desenvolvido para praticar conceitos fundamentais de desenvolvimento Full Stack, com foco em arquitetura de APIs REST, organização de código em camadas e integração entre Node.js, React e banco de dados relacional.
+
+O sistema permite criar, listar, consultar, atualizar e remover solicitações de crédito, simulando um fluxo comum em sistemas financeiros.
+
+Além da funcionalidade CRUD, o projeto foi estruturado para demonstrar boas práticas utilizadas em ambientes profissionais:
+
+- Separação de responsabilidades em camadas
+- Validação de dados no frontend e backend
+- Uso de variáveis de ambiente para segurança
+- Organização modular do código
+- Preparação para deploy em cloud (AWS)
+
+Este repositório serve como material de estudo, portfólio técnico e referência futura, permitindo revisitar conceitos importantes de desenvolvimento web.
 
 ---
 
@@ -11,220 +23,172 @@ projeto-credito/
 ├── backend/
 │   ├── src/
 │   │   ├── config/
-│   │   │   └── database.js          ← Conexão com MariaDB (pool)
+│   │   │   └── database.js
 │   │   ├── routes/
-│   │   │   └── solicitacaoRoutes.js ← Definição dos endpoints REST
+│   │   │   └── solicitacaoRoutes.js
 │   │   ├── controllers/
-│   │   │   └── solicitacaoController.js ← Recebe HTTP, devolve resposta
+│   │   │   └── solicitacaoController.js
 │   │   ├── services/
-│   │   │   └── solicitacaoService.js    ← Regras de negócio e validação
+│   │   │   └── solicitacaoService.js
 │   │   ├── models/
-│   │   │   └── solicitacaoModel.js      ← Acesso ao banco (único lugar)
-│   │   ├── app.js                   ← Configuração do Express
-│   │   └── server.js                ← Ponto de entrada
-│   ├── database.sql                 ← Script de criação do banco
-│   ├── .env.example                 ← Variáveis de ambiente
+│   │   │   └── solicitacaoModel.js
+│   │   ├── app.js
+│   │   └── server.js
+│   ├── database.sql
+│   ├── .env.example
 │   └── package.json
 │
 └── frontend/
     ├── src/
     │   ├── components/
-    │   │   ├── FormSolicitacao.js   ← Formulário de criação
-    │   │   └── ListaSolicitacoes.js ← Listagem com ações
+    │   │   ├── FormSolicitacao.js
+    │   │   └── ListaSolicitacoes.js
     │   ├── services/
-    │   │   └── api.js               ← Chamadas Axios à API
-    │   ├── App.js                   ← Estado global + handlers
-    │   ├── App.css                  ← Estilos
-    │   └── index.js                 ← Entry point React
+    │   │   └── api.js
+    │   ├── App.js
+    │   ├── App.css
+    │   └── index.js
     ├── public/
     │   └── index.html
     ├── .env.example
     └── package.json
 ```
 
+A aplicação segue uma arquitetura organizada em camadas:
+
+- **Routes** → define os endpoints da API
+- **Controllers** → recebem requisições HTTP e retornam respostas
+- **Services** → concentram regras de negócio e validações
+- **Models** → responsável pelo acesso ao banco de dados
+
+Esse padrão facilita manutenção, testes e escalabilidade.
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+**Backend**
+- Node.js
+- Express
+- MariaDB
+- mysql2
+- dotenv
+
+**Frontend**
+- React
+- Axios
+- CSS
+
+**Ferramentas**
+- Git
+- npm
+- VS Code
+
 ---
 
 ## 🚀 Como Rodar o Projeto
 
 ### Pré-requisitos
+
 - Node.js 18+
-- MariaDB 10.2+ (ou MySQL 8+)
+- MariaDB ou MySQL
 - npm
 
 ### 1. Banco de Dados
-```bash
-# Acesse o MariaDB e execute o script:
-mysql -u root -p < backend/database.sql
 
-# Ou dentro do cliente MySQL:
-source /caminho/para/backend/database.sql
+Execute o script SQL localizado em `backend/database.sql`:
+
+```bash
+mysql -u root -p < backend/database.sql
 ```
+
+Isso criará o banco `credito_db`, a tabela `solicitacoes` e alguns registros de exemplo.
 
 ### 2. Backend
+
 ```bash
 cd backend
-
-# Instale as dependências
 npm install
-
-# Configure as variáveis de ambiente
 cp .env.example .env
-# Edite o .env com suas credenciais do banco
-
-# Inicie o servidor
-npm run dev    # desenvolvimento (com nodemon)
-npm start      # produção
 ```
-Servidor rodará em: **http://localhost:3001**
+
+Configure as credenciais do banco no arquivo `.env` e inicie o servidor:
+
+```bash
+npm run dev
+```
+
+Servidor disponível em: `http://localhost:3001`
 
 ### 3. Frontend
+
 ```bash
 cd frontend
-
-# Instale as dependências
 npm install
-
-# Configure a URL da API (opcional se usar proxy)
 cp .env.example .env
-
-# Inicie o React
 npm start
 ```
-Aplicação abrirá em: **http://localhost:3000**
+
+Aplicação disponível em: `http://localhost:3000`
 
 ---
 
-## 📋 Endpoints da API REST
+## 📋 Endpoints da API
 
-| Método | Rota                    | Descrição              | HTTP Success |
-|--------|-------------------------|------------------------|--------------|
-| POST   | /solicitacoes           | Criar solicitação      | 201 Created  |
-| GET    | /solicitacoes           | Listar todas           | 200 OK       |
-| GET    | /solicitacoes/:id       | Buscar por ID          | 200 OK       |
-| PUT    | /solicitacoes/:id       | Atualizar status       | 200 OK       |
-| DELETE | /solicitacoes/:id       | Remover                | 200 OK       |
-| GET    | /health                 | Health check           | 200 OK       |
-
-### Exemplos com curl
-
-```bash
-# Criar solicitação
-curl -X POST http://localhost:3001/solicitacoes \
-  -H "Content-Type: application/json" \
-  -d '{"nome":"Maria Santos","cpf":"12345678901","valorSolicitado":5000,"qtdParcelas":12}'
-
-# Listar todas
-curl http://localhost:3001/solicitacoes
-
-# Buscar por ID
-curl http://localhost:3001/solicitacoes/1
-
-# Atualizar status
-curl -X PUT http://localhost:3001/solicitacoes/1 \
-  -H "Content-Type: application/json" \
-  -d '{"status":"APROVADO"}'
-
-# Deletar
-curl -X DELETE http://localhost:3001/solicitacoes/1
-```
+| Método | Rota | Descrição |
+|---|---|---|
+| `POST` | `/solicitacoes` | Criar solicitação |
+| `GET` | `/solicitacoes` | Listar todas |
+| `GET` | `/solicitacoes/:id` | Buscar por ID |
+| `PUT` | `/solicitacoes/:id` | Atualizar status |
+| `DELETE` | `/solicitacoes/:id` | Remover |
+| `GET` | `/health` | Health check |
 
 ---
 
 ## 📦 Modelo de Dados
 
-### Tabela `solicitacoes`
-| Campo           | Tipo              | Regras                         |
-|-----------------|-------------------|--------------------------------|
-| id              | INT AUTO_INCREMENT| PK, gerado automaticamente     |
-| nome            | VARCHAR(255)      | NOT NULL                       |
-| cpf             | CHAR(11)          | NOT NULL, exatamente 11 dígitos|
-| valorSolicitado | DECIMAL(15,2)     | NOT NULL, > 0                  |
-| qtdParcelas     | INT               | NOT NULL, > 0                  |
-| status          | ENUM              | EM_ANALISE / APROVADO / NEGADO |
-| dataCriacao     | TIMESTAMP         | DEFAULT CURRENT_TIMESTAMP      |
+**Tabela `solicitacoes`**
 
-### JSON de Criação (POST)
-```json
-{
-  "nome": "Maria Santos",
-  "cpf": "12345678901",
-  "valorSolicitado": 5000.00,
-  "qtdParcelas": 12
-}
-```
-
-### JSON de Resposta
-```json
-{
-  "id": 1,
-  "nome": "Maria Santos",
-  "cpf": "12345678901",
-  "valorSolicitado": 5000.00,
-  "qtdParcelas": 12,
-  "status": "EM_ANALISE",
-  "dataCriacao": "2026-03-04T10:00:00.000Z"
-}
-```
+| Campo | Tipo | Regra |
+|---|---|---|
+| `id` | INT | PK, auto increment |
+| `nome` | VARCHAR(255) | obrigatório |
+| `cpf` | CHAR(11) | 11 dígitos |
+| `valorSolicitado` | DECIMAL | maior que 0 |
+| `qtdParcelas` | INT | maior que 0 |
+| `status` | ENUM | `EM_ANALISE` / `APROVADO` / `NEGADO` |
+| `dataCriacao` | TIMESTAMP | default `CURRENT_TIMESTAMP` |
 
 ---
 
-## 🧠 Conceitos para Entrevista
+## 🧠 Conceitos Demonstrados
 
-### Imutabilidade no React
-```javascript
-// ❌ ERRADO — mutação direta do estado
-solicitacoes.push(nova);
-setSolicitacoes(solicitacoes);
+Este projeto demonstra conceitos importantes para entrevistas técnicas:
 
-// ✅ CORRETO — cria novo array
-setSolicitacoes(prev => [nova, ...prev]);          // adicionar
-setSolicitacoes(prev => prev.map(s => s.id === id ? atualizada : s)); // atualizar
-setSolicitacoes(prev => prev.filter(s => s.id !== id));               // remover
-```
-
-### Camadas do Backend
-- **Routes**: define URLs e métodos HTTP
-- **Controller**: recebe req/res, chama service, retorna JSON
-- **Service**: regras de negócio, validações, lança erros semânticos
-- **Model**: única camada que acessa o banco de dados
-
-### Códigos HTTP
-- `200` OK — leitura e atualização bem-sucedidas
-- `201` Created — criação bem-sucedida
-- `400` Bad Request — dados inválidos
-- `404` Not Found — recurso não existe
-- `500` Internal Server Error — erro inesperado no servidor
-
-### Pool de Conexões
-Evita criar/destruir conexões a cada requisição. Reutiliza conexões abertas, limitando o máximo simultâneo (ex: 10).
+- Arquitetura em camadas
+- API REST
+- Imutabilidade no React
+- Tratamento de erros
+- Validação de dados
+- Uso de variáveis de ambiente
+- Organização modular do código
+- Boas práticas de versionamento com Git
 
 ---
 
-## ☁️ Deploy AWS (Estrutura Preparada)
+## ☁️ Estrutura Preparada para Deploy
 
-| Componente  | Serviço AWS       | Observação                              |
-|-------------|-------------------|-----------------------------------------|
-| Backend     | EC2 (t3.micro)    | Node.js + PM2 para manter processo vivo |
-| Banco       | RDS (MariaDB)     | Alterar DB_HOST no .env                 |
-| Frontend    | S3 + CloudFront   | `npm run build` → upload do /build      |
+O projeto foi organizado considerando uma possível arquitetura em cloud:
 
-Para subir o backend em produção, apenas mude o `.env`:
-```env
-DB_HOST=meu-banco.xxxxxxxx.us-east-1.rds.amazonaws.com
-NODE_ENV=production
-```
+| Componente | Serviço AWS |
+|---|---|
+| Backend | EC2 |
+| Banco de dados | RDS (MariaDB) |
+| Frontend | S3 + CloudFront |
 
 ---
 
-## ✅ Checklist de Boas Práticas
+## 🎯 Objetivo do Projeto
 
-- [x] Separação em camadas (routes → controller → service → model)
-- [x] Variáveis de ambiente para dados sensíveis
-- [x] Validação no frontend E no backend
-- [x] Estado React imutável (spread, map, filter)
-- [x] Pool de conexões com o banco
-- [x] Códigos HTTP semânticos
-- [x] Tratamento de erros em todas as camadas
-- [x] CORS configurado
-- [x] Health check endpoint
-- [x] Comentários explicativos no código
+Este repositório foi criado como projeto de estudo e portfólio, com o objetivo de consolidar conhecimentos em desenvolvimento Full Stack e servir como material de revisão para entrevistas técnicas.
